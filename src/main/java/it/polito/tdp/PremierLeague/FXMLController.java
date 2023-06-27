@@ -5,9 +5,12 @@
 package it.polito.tdp.PremierLeague;
 
 import java.net.URL;
+import java.util.List;
 import java.util.ResourceBundle;
 
+import it.polito.tdp.PremierLeague.model.Classifica;
 import it.polito.tdp.PremierLeague.model.Model;
+import it.polito.tdp.PremierLeague.model.Team;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -35,7 +38,7 @@ public class FXMLController {
     private Button btnSimula; // Value injected by FXMLLoader
 
     @FXML // fx:id="cmbSquadra"
-    private ComboBox<?> cmbSquadra; // Value injected by FXMLLoader
+    private ComboBox<Team> cmbSquadra; // Value injected by FXMLLoader
 
     @FXML // fx:id="txtN"
     private TextField txtN; // Value injected by FXMLLoader
@@ -48,12 +51,35 @@ public class FXMLController {
 
     @FXML
     void doClassifica(ActionEvent event) {
-
+    	
+    	
+    	List<Classifica> peggiori = this.model.getPeggiori(cmbSquadra.getValue());
+    	List<Classifica> migliori = this.model.getMigliori(cmbSquadra.getValue());
+    	txtResult.appendText("SQUADRE MIGLIORI\n");
+    	
+    	for(Classifica c: migliori) {
+    		txtResult.appendText(c.getT1().getName()+"("+c.getPunteggio()+")\n");
+    	}
+    	
+    	
+    	txtResult.appendText("SQUADRE PEGGIORI\n");
+    	for(Classifica c: peggiori) {
+    		txtResult.appendText(c.getT1().getName()+"("+c.getPunteggio()+")\n");
+    	}
+    	
     }
 
     @FXML
     void doCreaGrafo(ActionEvent event) {
-
+    	
+    	this.model.buildGraph();
+    	txtResult.appendText("grafo correttamente creato\n");
+    	txtResult.appendText("#vertici: " + this.model.getGraph().vertexSet().size()+"\n");
+    	txtResult.appendText("#archi: " + this.model.getGraph().edgeSet().size()+"\n");
+    	
+    	cmbSquadra.getItems().setAll(this.model.getGraph().vertexSet());
+    	
+    	
     }
 
     @FXML
